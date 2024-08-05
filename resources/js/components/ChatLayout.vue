@@ -4,9 +4,9 @@
         <div class="inbox_msg">
             <div class="inbox_people">
                 <div class="inbox_chat">
-                    <div v-for="item in users">
+                    <div @click="loadMessage(item.id)" v-for="item in users">
                         <div v-if="user.id !== item.id" class="chat_list">
-                            <div  class="chat_people">
+                            <div class="chat_people">
                                 <div class="chat_img"><img src="https://ptetutorials.com/images/user-profile.png"
                                                            alt="sunil"></div>
                                 <div class="chat_ib">
@@ -41,10 +41,12 @@
                 </div>
                 <div class="type_msg">
                     <div class="input_msg_write">
-                        <input v-model="newMessage" @keyup.enter="checkEmptyMessage" type="text" class="write_msg" name="message"
+                        <input v-model="newMessage" @keyup.enter="checkEmptyMessage" type="text" class="write_msg"
+                               name="message"
                                placeholder="Type a message"/>
-                        <button @click="checkEmptyMessage" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                                                                           aria-hidden="true"></i>
+                        <button @click="checkEmptyMessage" class="msg_send_btn" type="button"><i
+                            class="fa fa-paper-plane-o"
+                            aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -60,6 +62,15 @@ export default {
     el: "#app",
     props: ['user'],
 
+    methods: {
+         loadMessage: function(user_id) {
+            axios.get('/load-message/' + user_id)
+                .then(res => {
+
+                })
+        }
+    },
+
     setup(props) {
         let messages = ref([])
         let newMessage = ref('')
@@ -67,7 +78,6 @@ export default {
         let users = ref([])
 
         onMounted(() => {
-            fetchMessages()
             allUser()
         })
 
@@ -91,15 +101,8 @@ export default {
             }
         }
 
-        const fetchMessages = async() => {
-            axios.get('/messages')
-                .then(res => {
-                    messages.value = res.data;
-                })
-        }
 
-
-        const addMessage = async() => {
+        const addMessage = async () => {
             let user_message = {
                 user: props.user,
                 message: newMessage.value
@@ -126,15 +129,23 @@ export default {
                 })
         }
 
+        const loadMessage = (user_id) => {
+            axios.get('/load-message/' + user_id)
+                .then(res => {
+                    messages.value = res.data;
+                });
+        }
+
         return {
             messages,
             newMessage,
             checkEmptyMessage,
-            fetchMessages,
+            loadMessage,
             hasScrollToBottom,
             users
         }
     },
+
 }
 
 

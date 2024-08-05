@@ -34,5 +34,11 @@ class ChatController extends Controller
         return Message::with('user')->get();
     }
 
+    public function loadMessage($userId)
+    {
+        $user = User::query()->find($userId);
+        return $user?->messages()->with(['user'])->get();
+    }
+
 
 }
