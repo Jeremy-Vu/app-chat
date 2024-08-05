@@ -51,6 +51,7 @@ Route::get('logout', function () {
 Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
 
 Route::post('message', [ChatController::class, 'message'])->name('message');
+Route::get('load-message/{userId}', [ChatController::class, 'loadMessage'])->name('load-message');
 Route::get('messages', [ChatController::class, 'allMessage'])->name('all-message');
 
 Route::get('users', function (){
